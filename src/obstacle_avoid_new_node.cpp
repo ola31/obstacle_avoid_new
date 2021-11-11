@@ -14,7 +14,7 @@
 
 #define DIS_CONTINUE_THRESHOLD 0.5
 
-int version = 3;
+int version = 2;
 
 float Kp_lindar = 0.4;
 float Kp_angular = 0.4;
