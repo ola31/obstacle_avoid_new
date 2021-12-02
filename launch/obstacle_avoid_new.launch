@@ -1,4 +1,5 @@
 <launch>
   <node name="obstacle_avoid_new_node" pkg="obstacle_avoid_new" type="obstacle_avoid_new_node" output="screen" />
+  <include file="$(find ydlidar_ros)/launch/X4.launch"> </include>
 </launch>
 
