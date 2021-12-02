@@ -185,7 +185,7 @@ int i=0;
             laser_min = laserscan_arr[i];
           }
         }
-        linear_x = 0.4;
+        linear_x = 0.2;
         angular_z = -2*(0.6-laser_min);
        /* if(laserscan_arr[30]>2){
           angular_z = 1*0.5*(laserscan_arr[5]-laserscan_arr[175]);
