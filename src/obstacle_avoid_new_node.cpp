@@ -1,6 +1,7 @@
 #include "ros/ros.h"
 #include "std_msgs/String.h"
 #include "std_msgs/Float32.h"
+#include "std_msgs/UInt16.h"
 #include "sensor_msgs/Imu.h"
 #include "sensor_msgs/LaserScan.h"
 #include "geometry_msgs/Twist.h"
@@ -364,17 +365,20 @@ int main(int argc, char **argv)
   ros::init(argc, argv, "obstacle_avoid_new_node");
   ros::NodeHandle nh;
 
-  ros::Publisher yaw_angle_pub = nh.advertise<std_msgs::Float32>("yaw_angle", 1000);
-  ros::Subscriber imu_sub = nh.subscribe("imu",1,imuCallback);
+  //ros::Publisher yaw_angle_pub = nh.advertise<std_msgs::Float32>("yaw_angle", 1000);
+  //ros::Subscriber imu_sub = nh.subscribe("imu",1,imuCallback);
   ros::Subscriber scan_sub = nh.subscribe("/scan", 1000, scan_Callback);
-   ros::Publisher cmd_vel_pub = nh.advertise<geometry_msgs::Twist>("cmd_vel", 1000);
+  ros::Publisher cmd_vel_pub = nh.advertise<geometry_msgs::Twist>("cmd_vel", 1000);
+  ros::Publisher status_pub = nh.advertise<std_msgs::UInt16>("/obstacle_state", 1000);
 
 
   ros::Rate loop_rate(60);
   while (ros::ok())
   {
-    //std_msgs::String msg;
-    //msg.data = "hello world";
+    std_msgs::UInt16 status_msg;
+    status_msg.data = 1;
+    status_pub.publish(status_msg);
+
     std_msgs::Float32 msg;
     geometry_msgs::Twist msg1;
 
@@ -383,7 +387,7 @@ int main(int argc, char **argv)
     msg1.linear.x = linear_x;
     msg1.angular.z = angular_z;
 
-    yaw_angle_pub.publish(msg);
+    //yaw_angle_pub.publish(msg);
     cmd_vel_pub.publish(msg1);
 
     ros::spinOnce();
