@@ -367,7 +367,7 @@ int main(int argc, char **argv)
 
   //ros::Publisher yaw_angle_pub = nh.advertise<std_msgs::Float32>("yaw_angle", 1000);
   //ros::Subscriber imu_sub = nh.subscribe("imu",1,imuCallback);
-  ros::Subscriber scan_sub = nh.subscribe("/scan", 1000, scan_Callback);
+  ros::Subscriber scan_sub = nh.subscribe("/scan", 1, scan_Callback);
   ros::Publisher cmd_vel_pub = nh.advertise<geometry_msgs::Twist>("cmd_vel", 1000);
   ros::Publisher status_pub = nh.advertise<std_msgs::UInt16>("/obstacle_state", 1000);
 
