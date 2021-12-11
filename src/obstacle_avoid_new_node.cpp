@@ -1,6 +1,7 @@
 #include "ros/ros.h"
 #include "std_msgs/String.h"
 #include "std_msgs/Float32.h"
+#include "std_msgs/Int8.h"
 #include "std_msgs/UInt16.h"
 #include "sensor_msgs/Imu.h"
 #include "sensor_msgs/LaserScan.h"
@@ -38,6 +39,22 @@ float discon_distance = 100;
 
 float pre_angular_z = 0.0;
 
+int operating_mode = 5; //mode defalut = 5 (joy not use)
+
+
+void modeCallback(const std_msgs::Int8::ConstPtr& msg){
+
+  if(operating_mode != msg->data){
+
+    //ROS_INFO("modecallback1");
+    operating_mode = msg->data;
+  }
+
+  //ROS_INFO("modecallback2");
+}
+
+
+
 void scan_Callback(const sensor_msgs::LaserScan::ConstPtr& msg){
 /*
   int i = 0;
@@ -50,7 +67,7 @@ void scan_Callback(const sensor_msgs::LaserScan::ConstPtr& msg){
 
 
   */
-
+/*
 if(version == 1){
 int i=0;
 
@@ -141,6 +158,8 @@ int i=0;
 
 
 }
+*/
+
   if(version ==2){
 
     int i=0;
@@ -201,10 +220,12 @@ int i=0;
         }
         ROS_INFO("laser_min : %f",laser_min);
 
-        angular_z = 0.3*angular_z + 0.7*pre_angular_z;
+        angular_z = 0.3*angular_z + 0.7*pre_angular_z; //lowpass filter
         pre_angular_z = angular_z;
 
   }
+
+  /*
   if(version ==3){
 
     int i=0;
@@ -268,11 +289,12 @@ int i=0;
         }
         linear_x = 0.3;
         angular_z =-0.07*(right_area - left_area);
-       /* if(laserscan_arr[30]>2){
-          angular_z = 1*0.5*(laserscan_arr[5]-laserscan_arr[175]);
-          ROS_INFO("testing1");
+       //if(laserscan_arr[30]>2){
+       //   angular_z = 1*0.5*(laserscan_arr[5]-laserscan_arr[175]);
+       //   ROS_INFO("testing1");
 
-        }*/
+       // }
+
         if(laserscan_arr[5]>2 || laserscan_arr[175]>2){
           angular_z = 0.0;
           linear_x = 0.0;
@@ -286,6 +308,8 @@ int i=0;
         pre_angular_z = angular_z;
 
   }
+  */
+
 }
 
 void imuCallback(const sensor_msgs::Imu::ConstPtr msg){
@@ -370,6 +394,7 @@ int main(int argc, char **argv)
   ros::Subscriber scan_sub = nh.subscribe("/scan", 1, scan_Callback);
   ros::Publisher cmd_vel_pub = nh.advertise<geometry_msgs::Twist>("cmd_vel", 1000);
   ros::Publisher status_pub = nh.advertise<std_msgs::UInt16>("/obstacle_state", 1000);
+  ros::Subscriber mode_sub = nh.subscribe("/mode", 10, modeCallback);
 
 
   ros::Rate loop_rate(60);
@@ -388,7 +413,11 @@ int main(int argc, char **argv)
     msg1.angular.z = angular_z;
 
     //yaw_angle_pub.publish(msg);
-    cmd_vel_pub.publish(msg1);
+
+    if(operating_mode == 5){  // 5 = JoyNotUse
+      cmd_vel_pub.publish(msg1);
+     // ROS_INFO("operating mode : %d",operating_mode);
+    }
 
     ros::spinOnce();
 
