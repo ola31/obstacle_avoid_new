@@ -41,6 +41,8 @@ float pre_angular_z = 0.0;
 
 int operating_mode = 5; //mode defalut = 5 (joy not use)
 
+int phase = 1;
+
 
 void modeCallback(const std_msgs::Int8::ConstPtr& msg){
 
@@ -190,7 +192,7 @@ int i=0;
         }
 
 
-
+       if(phase == 1){
 
         for(i=0;i<80;i++){
 
@@ -222,6 +224,22 @@ int i=0;
 
         angular_z = 0.3*angular_z + 0.7*pre_angular_z; //lowpass filter
         pre_angular_z = angular_z;
+
+        if(laserscan_arr[10]>1.0 && laserscan_arr[10]>1.0){
+          phase++;
+        }
+       }
+       if(phase == 1){
+        ROS_INFO("phase1(mission done)");
+        ROS_INFO("=====================================================");
+        ROS_INFO("*****************************************************");
+        ROS_INFO("=====================================================");
+        ROS_INFO("*****************************************************");
+
+         linear_x = 0.0;
+         angular_z = 0.0;
+
+       }
 
   }
 
