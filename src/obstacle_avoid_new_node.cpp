@@ -27,7 +27,6 @@ float theta_p = 0.0;
 float linear_x = 0.0;
 float angular_z = 0.0;
 
-int phase =0;
 int count_1 = 0;
 
 float yd_laserscan_arr[720]={0};
