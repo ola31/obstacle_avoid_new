@@ -436,6 +436,9 @@ int main(int argc, char **argv)
       cmd_vel_pub.publish(msg1);
      // ROS_INFO("operating mode : %d",operating_mode);
     }
+    else{
+      ROS_WARN("Operating_Mode is not JoyNotUse(5)mode, Robot will not move");
+    }
 
     ros::spinOnce();
 
